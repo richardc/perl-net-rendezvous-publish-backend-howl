@@ -43,3 +43,30 @@ sub step {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+Net::Rendezvous::Publish::Backend::Howl - interface to Porchdog software's Howl library
+
+=head1 DESCRIPTION
+
+This module interfaces to the Porchdog's Howl library in order to
+allow service publishing.
+
+=head1 AUTHOR
+
+Richard Clamp <richardc@unixbeard.net>
+
+=head1 COPYRIGHT
+
+Copyright 2004, Richard Clamp.  All Rights Reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+Net::Rendezvous::Publish - the module this module supports
+
+L<Howl|http://www.porchdogsoft.com/products/howl/>
