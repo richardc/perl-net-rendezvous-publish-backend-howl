@@ -7,6 +7,7 @@ Module::Build->new(
     requires    => {
         'perl'          => '5.006',
         'Net::Rendezvous::Publish' => 0,
+        'Class::Accessor::Lvalue' => 0,
         'Test::More'    => 0,
     },
     extra_compiler_flags => (`pkg-config howl --cflags`).'',
