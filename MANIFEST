@@ -7,3 +7,4 @@ lib/Net/Rendezvous/Publish/Backend/typemap
 MANIFEST
 MANIFEST.SKIP
 t/live.t
+t/backend_core.pl

@@ -2,7 +2,7 @@ package Net::Rendezvous::Publish::Backend::Howl;
 use strict;
 use warnings;
 use XSLoader;
-use base qw( Net::Rendezvous::Publish::Backend Class::Accessor::Lvalue::Fast );
+use base qw( Class::Accessor::Lvalue::Fast );
 __PACKAGE__->mk_accessors(qw( _handle _salt ));
 our $VERSION = 0.01;
 
