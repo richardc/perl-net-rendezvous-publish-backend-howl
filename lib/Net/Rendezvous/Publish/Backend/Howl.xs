@@ -7,7 +7,7 @@
 #include <rendezvous/rendezvous.h>
 #include <rendezvous/text_record.h>
 
-#define MY_DEBUG 1
+#define MY_DEBUG 0
 #if MY_DEBUG
 #  define DS(x) (x)
 #else
@@ -18,7 +18,8 @@
 static sw_string
 status_text[] = {
     "success",
-    "Stopped",
+    "success", /* should be "Stopped", but in Howl 0.9.8 it seems to
+		* tell me STOPPED when it should be STARTED. I Hate Software */
     "Name Collision",
     "Invalid"
 };
