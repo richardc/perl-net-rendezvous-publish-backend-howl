@@ -4,6 +4,7 @@
 #include "XSUB.h"
 
 #include <rendezvous/rendezvous.h>
+#include <rendezvous/text_record.h>
 
 #define MY_DEBUG 0
 #if MY_DEBUG
@@ -62,7 +63,7 @@ OUTPUT:
     RETVAL
 
 sw_rendezvous_publish_id
-xs_publish( self, object, name, type, domain, host, port, text )
+xs_publish( self, object, name, type, domain, host, port, text_chunks )
 sw_rendezvous self;
 SV* object;
 sw_const_string name;
@@ -70,22 +71,39 @@ sw_const_string type;
 sw_const_string domain;
 sw_const_string host;
 sw_port port;
-SV *text;
+AV *text_chunks;
 CODE:
 {
     sw_rendezvous_publish_id id;
     sw_result result;
-    STRLEN len;
-    char *str = SvPV( text, len );
+    sw_text_record text;
+    int i;
+
+
+    if ( sw_text_record_init( &text ) != SW_OKAY ) {
+	croak("sw_text_record_init failed");
+    }
+    for (i = 0; i <= av_len(text_chunks); i++) {
+	SV **chunk = av_fetch(text_chunks, i, 0);
+        char *str = SvPV_nolen(*chunk);
+	DS( warn("add_string %s\n", str) );
+	if ( sw_text_record_add_string( text, str ) != SW_OKAY ) {
+	    croak("sw_text_record_add_string failed");
+	}
+    }
+
     DS( warn("publish %s %s %d %x\n", name, type, port, object ) );
+    
     if ((result = sw_rendezvous_publish( 
-	     self, name, type, *domain ? domain : NULL, host, port, 
-	     str, len,
+	     self, name, type, *domain ? domain : NULL, *host ? host : NULL, port, 
+	     sw_text_record_bytes(text), sw_text_record_len(text),
 	     NULL, publish_reply, SvREFCNT_inc( object), &id 
 	     )) != SW_OKAY)
     {
+        //sw_text_record_fina( &text );
 	croak("publish failed: %d\n", result);
     }
+    //sw_text_record_fina( &text );
     RETVAL = id;
 }
 OUTPUT: RETVAL

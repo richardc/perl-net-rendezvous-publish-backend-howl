@@ -24,6 +24,7 @@ sub DESTROY {
 sub publish {
     my $self = shift;
     my %args = @_;
+    $args{txt} = [ split /\x{1}/, $args{txt} ];
     return xs_publish( $self->_handle, map {
         $_ || ''
     } @args{qw( object name type domain host port txt )} );
