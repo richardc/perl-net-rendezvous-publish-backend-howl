@@ -4,7 +4,7 @@ use warnings;
 use XSLoader;
 use base qw( Class::Accessor::Lvalue::Fast );
 __PACKAGE__->mk_accessors(qw( _handle _salt ));
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 
 XSLoader::load __PACKAGE__;
 
@@ -71,3 +71,5 @@ it under the same terms as Perl itself.
 Net::Rendezvous::Publish - the module this module supports
 
 L<Howl|http://www.porchdogsoft.com/products/howl/>
+
+=cut
