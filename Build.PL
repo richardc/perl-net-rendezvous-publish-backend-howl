@@ -9,8 +9,8 @@ Module::Build->new(
         'Net::Rendezvous::Publish' => 0,
         'Test::More'    => 0,
     },
-    extra_compiler_flags => '-I/usr/local/howl/include/howl-0.9.2',
-    extra_linker_flags => '-L/usr/local/howl/lib -lrendezvous -lcorby -lsalt -lpthread',
-    create_makefile_pl => 'passthrough',
+    extra_compiler_flags => (`pkg-config howl --cflags`).'',
+    extra_linker_flags   => (`pkg-config howl --libs`).'',
+    create_makefile_pl   => 'passthrough',
    )
   ->create_build_script;
