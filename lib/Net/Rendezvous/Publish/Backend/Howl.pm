@@ -33,7 +33,7 @@ sub publish {
 sub publish_stop {
     my $self = shift;
     my $id   = shift;
-    return sw_rendezvous_stop_publish( $self->_handle, $id );
+    return sw_discovery_cancel( $self->_handle, $id );
 }
 
 sub step {

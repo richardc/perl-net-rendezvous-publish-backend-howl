@@ -3,10 +3,11 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#include <howl.h>
 #include <rendezvous/rendezvous.h>
 #include <rendezvous/text_record.h>
 
-#define MY_DEBUG 0
+#define MY_DEBUG 1
 #if MY_DEBUG
 #  define DS(x) (x)
 #else
@@ -25,7 +26,6 @@ status_text[] = {
 
 static sw_result
 publish_reply(  
-    sw_rendezvous_publish_handler handler,
     sw_rendezvous                 rendezvous,
     sw_rendezvous_publish_status  status,
     sw_rendezvous_publish_id      id,
@@ -95,9 +95,9 @@ CODE:
     DS( warn("publish %s %s %d %x\n", name, type, port, object ) );
     
     if ((result = sw_rendezvous_publish( 
-	     self, name, type, *domain ? domain : NULL, *host ? host : NULL, port, 
+	     self, 0, name, type, *domain ? domain : NULL, *host ? host : NULL, port, 
 	     sw_text_record_bytes(text), sw_text_record_len(text),
-	     NULL, publish_reply, SvREFCNT_inc( object), &id 
+	     publish_reply, SvREFCNT_inc( object), &id 
 	     )) != SW_OKAY)
     {
         /* sw_text_record_fina( &text ); */
@@ -109,7 +109,7 @@ CODE:
 OUTPUT: RETVAL
 
 sw_result
-sw_rendezvous_stop_publish(self, id)
+sw_discovery_cancel(self, id)
 	sw_rendezvous	self
 	sw_rendezvous_publish_id	id
 
