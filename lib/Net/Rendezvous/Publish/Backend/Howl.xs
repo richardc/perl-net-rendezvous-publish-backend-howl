@@ -100,10 +100,10 @@ CODE:
 	     NULL, publish_reply, SvREFCNT_inc( object), &id 
 	     )) != SW_OKAY)
     {
-        //sw_text_record_fina( &text );
+        /* sw_text_record_fina( &text ); */
 	croak("publish failed: %d\n", result);
     }
-    //sw_text_record_fina( &text );
+    /* sw_text_record_fina( &text ); */
     RETVAL = id;
 }
 OUTPUT: RETVAL
