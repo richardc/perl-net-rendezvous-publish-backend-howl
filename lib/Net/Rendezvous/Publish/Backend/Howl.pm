@@ -1,8 +1,8 @@
-package Net::ZeroConf::Backend::Howl;
+package Net::Rendezvous::Publish::Backend::Howl;
 use strict;
 use warnings;
 use XSLoader;
-use base qw( Net::ZeroConf::Backend Class::Accessor::Lvalue::Fast );
+use base qw( Net::Rendezvous::Publish::Backend Class::Accessor::Lvalue::Fast );
 __PACKAGE__->mk_accessors(qw( _handle _salt ));
 our $VERSION = 0.01;
 
@@ -33,25 +33,6 @@ sub publish_stop {
     my $self = shift;
     my $id   = shift;
     return sw_rendezvous_stop_publish( $self->_handle, $id );
-}
-
-sub browse {
-    my $self = shift;
-    my %args = @_;
-    return xs_browse( $self->_handle, map {
-        $_ || ''
-    } @args{qw( object type domain )} );
-}
-
-sub browse_stop {
-    my $self = shift;
-    my $id   = shift;
-    return sw_rendezvous_stop_browse_services( $self->_handle, $id );
-}
-
-sub run {
-    my $self = shift;
-    sw_rendezvous_run( $self->_handle );
 }
 
 sub step {

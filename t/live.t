@@ -1,6 +1,6 @@
 #!perl -w
 use strict;
 use warnings;
-our $class = "Net::ZeroConf::Backend::Howl";
+our $class = "Net::Rendezvous::Publish::Backend::Howl";
 
-require 't/core.pl';
+require 't/backend_core.pl';

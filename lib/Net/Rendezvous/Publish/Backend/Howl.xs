@@ -5,7 +5,7 @@
 
 #include <rendezvous/rendezvous.h>
 
-#define MY_DEBUG 1
+#define MY_DEBUG 0
 #if MY_DEBUG
 #  define DS(x) (x)
 #else
@@ -47,74 +47,8 @@ publish_reply(
     return SW_OKAY;
 }
 
-static
-sw_result
-browse_reply( 
-    sw_rendezvous_browse_handler  handler,
-    sw_rendezvous                 rendezvous,
-    sw_rendezvous_browse_id       id,
-    sw_rendezvous_browse_status   status,
-    sw_const_string               name,
-    sw_const_string               type,
-    sw_const_string               domain,
-    sw_opaque                     extra
-    )
-{
-    sw_rendezvous_resolve_id rid;
 
-    dSP;
-    ENTER;
-    SAVETMPS;
-    PUSHMARK(SP);
-
-    XPUSHs( (SV*) extra);
-    XPUSHs(sv_2mortal(newSVpv(name, 0)));
-    XPUSHs(sv_2mortal(newSVpv(type, 0)));
-    XPUSHs(sv_2mortal(newSVpv(domain, 0)));
-
-    switch (status) {
-    case SW_RENDEZVOUS_BROWSE_INVALID:
-	DS( warn("browse reply: Invalid\n") );
-	break;
-    case SW_RENDEZVOUS_BROWSE_RELEASE:
-	DS( warn("browse reply: Release\n") );
-	break;
-    case SW_RENDEZVOUS_BROWSE_ADD_DOMAIN:
-	DS( warn("browse reply: Add Domain\n") );
-	break;
-    case SW_RENDEZVOUS_BROWSE_ADD_DEFAULT_DOMAIN:
-	DS( warn("browse reply: Add Default Domain\n") );
-	break;
-    case SW_RENDEZVOUS_BROWSE_REMOVE_DOMAIN:
-	DS( warn("browse reply: Remove Domain\n") );
-	break;
-    case SW_RENDEZVOUS_BROWSE_ADD_SERVICE:
-	DS( warn("browse reply: Add Service %s %s %s\n", name, type, domain) );
-/*	if (sw_rendezvous_resolve(rendezvous, name, type, domain, NULL, my_resolver, NULL, &rid) != SW_OKAY)
-	DS( warn("resolve failed\n"); */
-	XPUSHs(sv_2mortal(newSVpv("add", 0)));
-	break;
-    case SW_RENDEZVOUS_BROWSE_REMOVE_SERVICE:
-	DS( warn("browse reply: Remove Service\n") );
-	DS( warn("remove service: %s %s %s\n", name, type, domain) );
-	XPUSHs(sv_2mortal(newSVpv("remove", 0)));
-
-	break;
-    case SW_RENDEZVOUS_BROWSE_RESOLVED:
-	DS( warn("browse reply: Resolved\n") );
-	break;
-    }
-
-    XPUSHs(sv_2mortal(newSViv(0)));
-
-    PUTBACK;
-    call_method("_browse_callback", G_DISCARD);
-    FREETMPS;
-    LEAVE;
-}
- 
-
-MODULE = Net::ZeroConf::Backend::Howl		PACKAGE = Net::ZeroConf::Backend::Howl		
+MODULE = Net::Rendezvous::Publish::Backend::Howl		PACKAGE = Net::Rendezvous::Publish::Backend::Howl		
 
 sw_rendezvous
 init_rendezvous()
@@ -153,43 +87,6 @@ CODE:
 	croak("publish failed: %d\n", result);
     }
     RETVAL = id;
-}
-OUTPUT: RETVAL
-
-sw_rendezvous_browse_id
-xs_browse( self, object, type, domain )
-sw_rendezvous self;
-SV *object;
-char *type;
-char *domain;
-CODE:
-{
-    sw_rendezvous_browse_id id;
-    sw_result result;
-    DS( warn("browse %s %s\n", type, domain ) );
-    if ((result = sw_rendezvous_browse_services( 
-	     self, type, *domain ? domain : NULL, 
-	     NULL,  browse_reply, SvREFCNT_inc( object ), &id
-	     )) != SW_OKAY)
-    {
-	croak("browse failed: %d\n", result);
-    }
-    DS( warn("browser started with id %x\n", id ) );
-    RETVAL = id;
-}
-OUTPUT: RETVAL
-
-sw_result
-sw_rendezvous_stop_browse_services(self, id)
-	sw_rendezvous	self
-	sw_rendezvous_browse_id	id
-CODE:
-{
-    DS( warn("stop browse %x\n", id ) );
-    if ((RETVAL = sw_rendezvous_stop_browse_services( self, &id )) != SW_OKAY)
-    {
-	croak("browse stop failed: %d\n", RETVAL);
-    }
 }
 OUTPUT: RETVAL
 
