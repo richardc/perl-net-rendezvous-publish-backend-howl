@@ -10,8 +10,8 @@ Module::Build->new(
         'Class::Accessor::Lvalue' => 0,
         'Test::More'    => 0,
     },
-    extra_compiler_flags => `pkg-config howl --cflags` || ' -I/usr/include/howl',
-    extra_linker_flags   => `pkg-config howl --libs` || ' -lhowl',
+    extra_compiler_flags => `pkg-config howl --cflags` || '-I/usr/include/howl',
+    extra_linker_flags   => `pkg-config howl --libs` || '-lhowl',
     create_makefile_pl   => 'passthrough',
    )
   ->create_build_script;
